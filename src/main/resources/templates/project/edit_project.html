@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"></meta>
+        <title>InstaTeam</title>
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'></link>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <link rel="stylesheet" href="/css/normalize.css"></link>
+        <link rel="stylesheet" href="/css/site.css"></link>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="site-header">
+                    <a class="logo" href="index.html">InstaTeam</a>
+                    <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
+                </div>
+            </div>
+        </header>
+        <nav>
+            <ul>
+                <li class="selected"><a href="index.html">Projects</a></li>
+                <li><a href="collaborators.html">Collaborators</a></li>
+                <li><a href="roles.html">Roles</a></li>
+            </ul>
+        </nav>
+        <section>
+            <div class="container wrapper">
+                <form th:object="${project}" th:action="@{${action}}" method="post">
+                <input id="project" th:field="*{id}" type="hidden"></input>
+                    <div>
+                        <label for="project_name"> Project Name:</label>
+                        <input type="text" th:name="*{name}" th:field="*{name}"></input>
+                    </div>
+                    <div>
+                        <label for="project_description">Project Description:</label>
+                        <textarea rows="4" th:name="*{description}" th:field="*{description}"></textarea>
+                    </div>
+                    <div>
+                        <label for="project_status">Project Status:</label>
+                        <div class="custom-select">
+                        <span class="dropdown-arrow"></span>
+                            <select name="project_status" th:field="*{status}">
+                                <option th:value="active">Active</option>
+                                <option th:value="archived">Archived</option>
+                                <option th:value="not_started">Not Started</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="project_roles">Project Roles:</label>
+                        <ul class="checkbox-list" th:each = "role : ${roles}">
+                            <li>
+                             <input type="checkbox" th:field="*{rolesNeeded}" th:value="${role}"></input>
+    							<span th:for="${#ids.prev('rolesNeeded')}"  th:text="${role.name}" th:id="${role.id}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="actions">
+                        <input type="submit" value="Save" class="button"></input>
+                        <a href="#" class="button button-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </body>
+</html>

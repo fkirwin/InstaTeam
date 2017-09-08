@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"></meta>
+        <title>InstaTeam</title>
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'></link>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <link rel="stylesheet" href="/css/normalize.css"></link>
+        <link rel="stylesheet" href="/css/site.css"></link>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="site-header">
+                    <a class="logo" href="index.html">InstaTeam</a>
+                    <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
+                </div>
+            </div>
+        </header>
+        <nav>
+            <ul>
+                <li class="selected"><a href="index.html">Projects</a></li>
+                <li><a href="collaborators.html">Collaborators</a></li>
+                <li><a href="roles.html">Roles</a></li>
+            </ul>
+        </nav>
+        <section>
+            <div class="container wrapper">
+                <div class="project-list">
+                   <div class="project" th:each = "project : ${projects}">
+                        <h2><a th:text ="${project.name}" th:href="@{|/addproject|}"></a></h2>
+                        <p title="{project.description}"></p>
+                        <span th:if="${project.status=='active'}" class="tag active">Active</span>
+                        <span th:if="${project.status=='archived'}" class="tag archived">Archived</span>
+                        <span th:if="${project.status=='Not Started'}" class="tag archived">Not Started</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

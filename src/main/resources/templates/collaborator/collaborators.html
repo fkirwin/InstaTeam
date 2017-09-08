@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"></meta>
+        <title>InstaTeam</title>
+        <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'></link>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <link rel="stylesheet" href="/css/normalize.css"></link>
+        <link rel="stylesheet" href="/css/site.css"></link>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="site-header">
+                    <a class="logo" href="index.html">InstaTeam</a>
+                    <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
+                </div>
+            </div>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/index">Projects</a></li>
+                <li class="selected"><a href="/collaborators">Collaborators</a></li>
+                <li><a href="/roles">Roles</a></li>
+            </ul>
+        </nav>
+        <section>
+            <div class="container wrapper" >
+                <form method="post">
+                    <h2>Manage Collaborators</h2>
+                    <ul class="checkbox-list" th:each = "collaborator : ${collaborators}">
+                    <a class="button" th:href="@{|/collaborators/${collaborator.id}/edit|}">Edit</a>
+                        <li>
+                            <span class="primary" th:text="${collaborator.name}"></span>
+                            <div class="custom-select">
+                                <span class="dropdown-arrow"></span>
+                                <select id="collaboratorrole" name="collaboratorrole">
+                                	<option th:text="${collaborator.role.name}"></option>
+                                    <option th:if="${!role.name.equals(collaborator.role.name)}" th:each = "role : ${roles}" th:value="${role.id}" th:text="${role.name}" name="roleid"></option>
+                                </select>
+                               
+                            </div>
+                            
+                        </li>
+                    </ul>
+                    
+                </form>
+            </div>
+        </section>
+        <section>
+            <div class="container wrapper">
+                <form method="post" th:action="@{|/collaborators/add|}" th:object="${collaborator}" id="collaborator">
+                   <div class="actions add-new-collaborator">
+                        <input type="text" placeholder="Name..." th:field="*{name}"></input>
+                        <div class="custom-select">
+                            <span class="dropdown-arrow"></span>
+							    <select id="collaboratorrole" name="collaboratorrole">
+                                    <option th:each = "role : ${roles}" th:value="${role.id}" th:text="${role.name}" name="roleid" ></option>
+                                </select>
+                        </div>
+                        <button class="button" type="submit">Add</button>
+					</div>
+                </form>
+            </div>
+        </section>
+    </body>
+</html>
