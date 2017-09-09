@@ -106,7 +106,9 @@ public class ProjectController
     public String editProject(@PathVariable Long projectId, Model model) 
     {   
 		Project project = projectService.findById(projectId);
+		List<Role> currentRoles = project.getRolesNeeded();
 		model.addAttribute("project", project);
+		model.addAttribute("currentRoles", currentRoles);
 		
 		List<Role> roles = roleService.findAll();
 		model.addAttribute("roles", roles);
