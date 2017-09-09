@@ -13,16 +13,16 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html">InstaTeam</a>
-                    <a class="new-project button icon-left" href="#"><i class="material-icons">add</i> New Project</a>
+                    <a class="logo" th:href="@{|/index|}">InstaTeam</a>
+                    <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
                 </div>
             </div>
         </header>
         <nav>
             <ul>
-                <li><a href="/index">Projects</a></li>
-                <li><a href="/collaborators">Collaborators</a></li>
-                <li class="selected"><a href="/roles">Roles</a></li>
+                <li><a th:href="@{|/index|}">Projects</a></li>
+                <li><a th:href="@{|/collaborators|}">Collaborators</a></li>
+                <li class="selected"><a th:href="@{|/roles|}">Roles</a></li>
             </ul>
         </nav>
         <section>

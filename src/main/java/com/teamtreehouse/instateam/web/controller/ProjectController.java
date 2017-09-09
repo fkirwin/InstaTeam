@@ -34,7 +34,7 @@ public class ProjectController
 	@Autowired
 	private ProjectService projectService;
 	
-	@RequestMapping("/index")
+	@RequestMapping(value={"/index","/",""})
     public String getProjectIndex(Model model) 
     {   
 		if(!model.containsAttribute("project")) 
@@ -54,7 +54,7 @@ public class ProjectController
 		List<Project> projects = projectService.findAll();
 		model.addAttribute("projects",projects);
 		
-        return "project/index";
+        return "index";
     }
 	
 	@RequestMapping("/addproject")
@@ -135,9 +135,22 @@ public class ProjectController
     }
 	
 	
-	@RequestMapping("/projectdetail")
-    public String getProjectDetails(Model model) 
+	@RequestMapping("/projectdetail/{projectId}")
+    public String getProjectDetails(@PathVariable Long projectId, Model model) 
     {   
+		Project project = projectService.findById(projectId);
+		List<Role> currentRoles = project.getRolesNeeded();
+		List<Collaborator> currentCollaborators = project.getCollaborators();
+		model.addAttribute("project", project);
+		model.addAttribute("currentRoles", currentRoles);
+		model.addAttribute("currentCollaborators", currentCollaborators);
+		
+		List<Role> roles = roleService.findAll();
+		model.addAttribute("roles", roles);
+		
+		List<Collaborator> collaborators = collaboratorService.findAll();
+		model.addAttribute("collaborators", collaborators);
+		
         return "project/project_detail";
     }
 	

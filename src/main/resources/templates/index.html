@@ -13,23 +13,28 @@
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html">InstaTeam</a>
+                    <a class="logo" th:href="@{|/index|}">InstaTeam</a>
                     <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
                 </div>
             </div>
         </header>
         <nav>
             <ul>
-                <li class="selected"><a href="index.html">Projects</a></li>
-                <li><a href="collaborators.html">Collaborators</a></li>
-                <li><a href="roles.html">Roles</a></li>
+                <li class="selected"><a th:href="@{|/index|}">Projects</a></li>
+                <li><a th:href="@{|/collaborators|}">Collaborators</a></li>
+                <li><a th:href="@{|/roles|}">Roles</a></li>
             </ul>
         </nav>
         <section>
             <div class="container wrapper">
                 <div class="project-list">
                    <div class="project" th:each = "project : ${projects}">
-                        <h2><a th:text ="${project.name}" th:href="@{|/editproject/${project.Id}|}"></a></h2>
+                        <a class="button" text ="Edit" th:href="@{|/editproject/${project.Id}|}" title="Change Project Attributes">Edit</a>
+                        <a class="button" text ="Manage People" th:href="@{|/projectcollaborators/${project.Id}|}" title="Assign Collaborators and Roles">Manage</a>
+                        <a class="button" text ="View Details" th:href="@{|/projectdetail/${project.Id}|}" title="See Assignments">View</a>
+                        <h2>
+                        	<a th:text ="${project.name}"></a>
+                        </h2>
                         <p title="{project.description}"></p>
                         <span th:if="${project.status=='active'}" class="tag active">Active</span>
                         <span th:if="${project.status=='archived'}" class="tag archived">Archived</span>

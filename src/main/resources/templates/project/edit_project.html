@@ -9,11 +9,11 @@
         <link rel="stylesheet" href="/css/normalize.css"></link>
         <link rel="stylesheet" href="/css/site.css"></link>
     </head>
-    <body>
+	<body>
         <header>
             <div class="container">
                 <div class="site-header">
-                    <a class="logo" href="index.html">InstaTeam</a>
+                    <a class="logo" th:href="@{|/index|}">InstaTeam</a>
                     <a class="new-project button icon-left" th:href="@{|/addproject|}"><i class="material-icons">add</i> New Project</a>
                 </div>
             </div>
@@ -21,8 +21,8 @@
         <nav>
             <ul>
                 <li class="selected"><a th:href="@{|/index|}">Projects</a></li>
-                <li><a href="collaborators.html">Collaborators</a></li>
-                <li><a href="roles.html">Roles</a></li>
+                <li><a th:href="@{|/collaborators|}">Collaborators</a></li>
+                <li><a th:href="@{|/roles|}">Roles</a></li>
             </ul>
         </nav>
         <section>
