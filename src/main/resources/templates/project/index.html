@@ -29,7 +29,7 @@
             <div class="container wrapper">
                 <div class="project-list">
                    <div class="project" th:each = "project : ${projects}">
-                        <h2><a th:text ="${project.name}" th:href="@{|/addproject|}"></a></h2>
+                        <h2><a th:text ="${project.name}" th:href="@{|/editproject/${project.Id}|}"></a></h2>
                         <p title="{project.description}"></p>
                         <span th:if="${project.status=='active'}" class="tag active">Active</span>
                         <span th:if="${project.status=='archived'}" class="tag archived">Archived</span>

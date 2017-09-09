@@ -52,8 +52,9 @@
                         <label for="project_roles">Project Roles:</label>
                         <ul class="checkbox-list" th:each = "role : ${roles}">
                             <li>
-                             <input type="checkbox" th:field="*{rolesNeeded}" th:value="${role}"></input>
-    							<span th:for="${#ids.prev('rolesNeeded')}"  th:text="${role.name}" th:id="${role.id}"></span>
+                             <input type="checkbox" th:if="${#lists.isEmpty(rolesNeeded)}" th:value="${role.id}" name="roles"></input>
+                             <input th:each = "roleAllocated : *{rolesNeeded}" th:if="${roleAllocated.id==role.id}" type="checkbox" th:value="${role.id}" name="roles" checked="checked"></input>
+    							<span th:text="${role.name}" th:id="${role.id}"></span>
                             </li>
                         </ul>
                     </div>

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -83,22 +84,50 @@ public class ProjectController
 	}
 	
 	@RequestMapping(value="/saveaddedproject", method = RequestMethod.POST)
-    public String saveAddedProject(@Valid Project project, @RequestParam(name="rolesNeeded") List<Role> rolesNeeded, BindingResult result, RedirectAttributes redirectAttributes) 
+    public String saveAddedProject(@Valid Project project, 
+    								@RequestParam(value="roles") List<String> rolesNeeded, 
+    								BindingResult result, 
+    								RedirectAttributes redirectAttributes) 
     {   
-		project.setRolesNeeded(rolesNeeded);
+		List<Role> roles = new ArrayList<Role>();
+		
+		for(String role: rolesNeeded)
+		{
+			roles.add(roleService.findById(Long.parseLong(role)));
+		}
+			
+		project.setRolesNeeded(roles);
+		
 		projectService.save(project);
         return "redirect:/index";
     }
 	
-	@RequestMapping("/editproject")
-    public String editProject(Model model) 
+	@RequestMapping("/editproject/{projectId}")
+    public String editProject(@PathVariable Long projectId, Model model) 
     {   
+		Project project = projectService.findById(projectId);
+		model.addAttribute("project", project);
+		
+		List<Role> roles = roleService.findAll();
+		model.addAttribute("roles", roles);
+
+		
         return "project/edit_project";
     }
 	
 	@RequestMapping(value="/editproject/{projectId}", method = RequestMethod.POST)
-    public String saveEditedProject(@Valid Project project, Model model) 
+    public String saveEditedProject(@Valid Project project, 
+    								@RequestParam(value="roles") List<String> rolesNeeded, 
+    								Model model) 
     {   
+		List<Role> roles = new ArrayList<Role>();
+		
+		for(String role: rolesNeeded)
+		{
+			roles.add(roleService.findById(Long.parseLong(role)));
+		}
+			
+		project.setRolesNeeded(roles);
 		projectService.save(project);
         return "redirect:/index";
     }
