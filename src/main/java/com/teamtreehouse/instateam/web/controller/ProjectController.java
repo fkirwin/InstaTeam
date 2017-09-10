@@ -154,9 +154,21 @@ public class ProjectController
         return "project/project_detail";
     }
 	
-	@RequestMapping("/projectcollaborators")
-    public String getProjectCollaborators(Model model) 
+	@RequestMapping("/projectcollaborators/{projectId}")
+    public String getProjectCollaborators(@PathVariable Long projectId, Model model) 
     {   
+		Project project = projectService.findById(projectId);
+		List<Role> currentRoles = project.getRolesNeeded();
+		List<Collaborator> currentCollaborators = project.getCollaborators();
+		model.addAttribute("project", project);
+		model.addAttribute("currentRoles", currentRoles);
+		model.addAttribute("currentCollaborators", currentCollaborators);
+		
+		List<Role> roles = roleService.findAll();
+		model.addAttribute("roles", roles);
+		
+		List<Collaborator> collaborators = collaboratorService.findAll();
+		model.addAttribute("collaborators", collaborators);
         return "project/project_collaborators";
     }
 	

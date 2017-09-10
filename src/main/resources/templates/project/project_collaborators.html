@@ -27,48 +27,20 @@
         </nav>
         <section>
             <div class="container wrapper">
-                <form>
-                    <label>Edit Collaborators: Website Project</label>
-                    <ul class="checkbox-list">
-                        <li><span class="primary">Developer</span>
+                <form th:object="${project}" th:action="@{${action}}" method="post">
+                    <label th:text="${#strings.concat('For Project: ',project.name)}"></label>
+                    <ul class="checkbox-list" th:each = "role : ${roles}">
+                        <li><span class="primary" th:text="${role.name}">Developer</span>
                             <div class="custom-select">
                                 <span class="dropdown-arrow"></span>
                                 <select>
-                                    <option value="#">Michael Pemulis</option>
-                                    <option value="#">Name</option>
-                                </select>
-                            </div>
-                        </li>
-                        <li><span class="primary">Designer</span>
-                            <div class="custom-select">
-                                <span class="dropdown-arrow"></span>
-                                <select>
-                                    <option value="#">Don Gately</option>
-                                    <option value="#">Name</option>
-                                </select>
-                            </div>
-                        </li>
-                        <li><span class="primary">QA</span>
-                            <div class="custom-select">
-                                <span class="dropdown-arrow"></span>
-                                <select>
-                                    <option value="#">Joelle Van Dyne</option>
-                                    <option value="#">Name</option>
-                                </select>
-                            </div>
-                        </li>
-                        <li><span class="primary">DevOps</span>
-                            <div class="custom-select">
-                                <span class="dropdown-arrow"></span>
-                                <select>
-                                    <option value="#">Choose...</option>
-                                    <option value="#">Name</option>
+                                    <option th:each = "collaborator : ${collaborators}" th:text="${collaborator.name}" value="${collaborator.id}">Michael Pemulis</option>
                                 </select>
                             </div>
                         </li>
                     </ul>
                     <div class="actions">
-                        <input type="submit" value="Save" class="button">
+                        <input type="submit" value="Save" class="button"></input>
                         <a href="#" class="button button-secondary">Cancel</a>
                     </div>
                 </form>
