@@ -27,21 +27,22 @@
         </nav>
         <section>
             <div class="container wrapper">
-                <form th:object="${project}" th:action="@{${action}}" method="post">
+                <form th:object="${project}" th:action="@{|/changeprojectcollaborators/${project.Id}|}" method="post">
                     <label th:text="${#strings.concat('For Project: ',project.name)}"></label>
                     <ul class="checkbox-list" th:each = "role : ${roles}">
-                        <li><span class="primary" th:text="${role.name}">Developer</span>
-                            <div class="custom-select">
-                                <span class="dropdown-arrow"></span>
-                                <select>
-                                    <option th:each = "collaborator : ${collaborators}" th:text="${collaborator.name}" value="${collaborator.id}">Michael Pemulis</option>
-                                </select>
-                            </div>
+                        <li>
+                        	<span class="primary" th:text="${role.name}" th:value="${role.id}">Developer</span>
+                            	<div class="custom-select">
+                                	<span class="dropdown-arrow"></span>
+                                	<select>
+                                    	<option th:each = "collaborator : ${collaborators}" th:text="${collaborator.name}" th:value="${collaborator.id}" name="collaborators">Michael Pemulis</option>
+                                	</select>
+                            	</div>
                         </li>
                     </ul>
                     <div class="actions">
                         <input type="submit" value="Save" class="button"></input>
-                        <a href="#" class="button button-secondary">Cancel</a>
+                        <a href='#' class="button button-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

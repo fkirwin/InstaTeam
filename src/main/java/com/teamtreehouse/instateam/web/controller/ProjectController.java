@@ -172,16 +172,22 @@ public class ProjectController
         return "project/project_collaborators";
     }
 	
-	@RequestMapping("/addprojectcollaborators")
-    public String addProjectCollaborators(Model model) 
+	@RequestMapping(value="/changeprojectcollaborators/{projectId}", method = RequestMethod.POST)
+    public String addProjectCollaborators(@Valid Project project, 
+			@RequestParam(value="collaborators") List<String> collaborators,
+			Model model) 
     {   
-        return "project/project_collaborators";
+		List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
+		
+		for(String cs: collaborators)
+		{
+			collaboratorList.add(collaboratorService.findById(Long.parseLong(cs)));
+		}
+			
+		project.setCollaborators(collaboratorList);
+		projectService.save(project);
+        return "redirect:/index";
     }
 	
-	@RequestMapping("/removeprojectcollaborators")
-    public String removeProjectCollaborators(Model model) 
-    {   
-        return "project/project_collaborators";
-    }
-    
+
 }
