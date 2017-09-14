@@ -1,7 +1,9 @@
 package com.teamtreehouse.instateam.bootstrap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -45,7 +47,12 @@ public class Data implements ApplicationRunner
 		return role;
 	}
 	
-	public Project populateProject(String name, String status, String description, List<Role>roles, List<Collaborator> collaborators)
+	public Project populateProject(String name, 
+			String status, 
+			String description, 
+			List<Role>roles, 
+			List<Collaborator> collaborators, 
+			Map<Role,Collaborator> collaboratorRoles)
 	{
 		Project project = new Project.ProjectBuilder()
 				.withName(name)
@@ -53,6 +60,7 @@ public class Data implements ApplicationRunner
 				.withDescription(description)
 				.withRoles(roles)
 				.withCollaborators(collaborators)
+				.withCollaboratorRoles(collaboratorRoles)
 				.build();
 		ps.save(project);
 		
@@ -72,7 +80,7 @@ public class Data implements ApplicationRunner
 			collaborators.add(populateCollaborator("Tom", roles.get(0)));
 			collaborators.add(populateCollaborator("Dick", roles.get(1)));	
 			collaborators.add(populateCollaborator("Harry", roles.get(2)));
-	
+
 	
 			populateProject("Website", "active", "Making a website", roles, collaborators);
 			populateProject("MobileApp", "active", "Making a mobile app", roles, collaborators);

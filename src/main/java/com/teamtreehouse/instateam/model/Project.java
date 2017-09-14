@@ -2,13 +2,16 @@ package com.teamtreehouse.instateam.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -38,7 +41,7 @@ public class Project
     
     @ManyToMany()
     private List<Collaborator> collaborators = new ArrayList<>();
-
+    
     public Project(){};
     
 	public Project(ProjectBuilder projectBuilder)
@@ -117,6 +120,7 @@ public class Project
         private String description;
         private List<Role> roles;
         private List<Collaborator> collaborators;
+        private Map<Role,Collaborator> collaboratorRoles;
 
         public ProjectBuilder() 
         {
@@ -152,6 +156,7 @@ public class Project
         	this.collaborators=collaborators;
         	return this;
         }
+        
         
         public Project build() 
         {

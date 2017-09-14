@@ -164,19 +164,21 @@ public class ProjectController
 		model.addAttribute("currentRoles", currentRoles);
 		model.addAttribute("currentCollaborators", currentCollaborators);
 		
-		List<Role> roles = roleService.findAll();
-		model.addAttribute("roles", roles);
+		//List<Role> roles = roleService.findAll();
+		//model.addAttribute("roles", roles);
 		
-		List<Collaborator> collaborators = collaboratorService.findAll();
-		model.addAttribute("collaborators", collaborators);
+		//List<Collaborator> collaborators = collaboratorService.findAll();
+		//model.addAttribute("collaborators", collaborators);
         return "project/project_collaborators";
     }
 	
 	@RequestMapping(value="/changeprojectcollaborators/{projectId}", method = RequestMethod.POST)
     public String addProjectCollaborators(@Valid Project project, 
 			@RequestParam(value="collaborators") List<String> collaborators,
+			BindingResult br,
 			Model model) 
     {   
+		System.out.println(br.getAllErrors());
 		List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
 		
 		for(String cs: collaborators)
