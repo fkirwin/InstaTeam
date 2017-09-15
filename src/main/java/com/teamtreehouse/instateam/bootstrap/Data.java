@@ -51,8 +51,7 @@ public class Data implements ApplicationRunner
 			String status, 
 			String description, 
 			List<Role>roles, 
-			List<Collaborator> collaborators, 
-			Map<Role,Collaborator> collaboratorRoles)
+			List<Collaborator> collaborators)
 	{
 		Project project = new Project.ProjectBuilder()
 				.withName(name)
@@ -60,7 +59,6 @@ public class Data implements ApplicationRunner
 				.withDescription(description)
 				.withRoles(roles)
 				.withCollaborators(collaborators)
-				.withCollaboratorRoles(collaboratorRoles)
 				.build();
 		ps.save(project);
 		
