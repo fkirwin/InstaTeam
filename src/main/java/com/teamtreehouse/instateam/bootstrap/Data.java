@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 
 import com.teamtreehouse.instateam.model.Collaborator;
 import com.teamtreehouse.instateam.model.Project;
+import com.teamtreehouse.instateam.model.ProjectCollaboratorRoles;
 import com.teamtreehouse.instateam.model.Role;
 import com.teamtreehouse.instateam.service.CollaboratorService;
 import com.teamtreehouse.instateam.service.CollaboratorServiceImp;
+import com.teamtreehouse.instateam.service.ProjectCollaboratorRoleService;
 import com.teamtreehouse.instateam.service.ProjectService;
 import com.teamtreehouse.instateam.service.ProjectServiceImp;
 import com.teamtreehouse.instateam.service.RoleService;
@@ -29,6 +31,8 @@ public class Data implements ApplicationRunner
 	private ProjectService ps;
 	@Autowired
 	private RoleService rs;
+	@Autowired
+	private ProjectCollaboratorRoleService pcrs;
 	
 	
 	public Collaborator populateCollaborator(String name, Role role)
@@ -64,6 +68,12 @@ public class Data implements ApplicationRunner
 		
 		return project;
 	}
+	
+	public void assignProject(Role role, Collaborator collaborator,Project project)
+	{
+		ProjectCollaboratorRoles pcr = new ProjectCollaboratorRoles(role, collaborator,project);
+		pcrs.save(pcr);
+	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception
@@ -80,8 +90,15 @@ public class Data implements ApplicationRunner
 			collaborators.add(populateCollaborator("Harry", roles.get(2)));
 
 	
-			populateProject("Website", "active", "Making a website", roles, collaborators);
-			populateProject("MobileApp", "active", "Making a mobile app", roles, collaborators);
+			Project p1 = populateProject("Website", "active", "Making a website", roles, collaborators);
+			Project p2 = populateProject("MobileApp", "active", "Making a mobile app", roles, collaborators);
+			
+			assignProject(roles.get(0), collaborators.get(0), p1);
+			assignProject(roles.get(1), collaborators.get(1), p1);
+			assignProject(roles.get(2), collaborators.get(2), p2);
+			assignProject(roles.get(0), null, p2);
+			
+			
 		
 	}
 	

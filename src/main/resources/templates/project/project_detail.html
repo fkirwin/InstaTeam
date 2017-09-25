@@ -35,9 +35,10 @@
                     </div>
                     <div class="roles-collaborators">
                         <h3>Roles &amp; Collaborators</h3>
-                        <div class="list-item" th:each = "collaborator : ${currentCollaborators}">
-                            <span class="primary" th:text="${collaborator.role.name}">Developer</span>
-                            <span class="secondary" th:text="${collaborator.name}">Michael Pemulis</span>
+                        <div class="list-item" th:each = "rc : ${pcr}">
+                            <span class="primary" th:text="${rc.role.name}">Developer</span>
+                            <span class="secondary" th:if="${rc.collaborator!=null}" th:text="${rc.collaborator.name}">Michael Pemulis</span>
+                            <span class="secondary" th:if="${rc.collaborator==null}" text="Not Assigned">Not Assigned</span>
                         </div>
                     </div>
                     <div class="actions">

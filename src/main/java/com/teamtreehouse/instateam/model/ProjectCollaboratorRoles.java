@@ -17,29 +17,35 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Null;
 
+import org.hibernate.annotations.Columns;
+
+import com.teamtreehouse.instateam.service.RoleService;
+
 @Entity
 public class ProjectCollaboratorRoles implements Serializable
 {
-	@Id
-	@ManyToOne
-	
-	@JoinTable(name="Role", joinColumns=@JoinColumn(name="role_id", referencedColumnName="Id"))
-	//@Column(name="role_id")
-    private Role role;
-
-	@Id
-	@ManyToOne
-	@JoinColumn(name="Id")
-	@JoinTable(name="Collaborator")
-	//@Column(name="collaborator_id")
-    private Collaborator collaborator;
+	/*
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Null
+    private Long id;
+    */
     
 	@Id
-    @ManyToOne
-	@JoinColumn(name="Id")
-	@JoinTable(name="Project")
-	//@Column(name="project_id")
+    @ManyToOne(optional=true)
+    @JoinColumn(name="projectId", nullable=true)
     private Project project;
+	
+	@Id
+	@ManyToOne(optional=true)
+	@JoinColumn(name="roleId", nullable=true)
+    private Role role;
+
+	//@Id
+	@ManyToOne(optional=true)
+	@JoinColumn(name="collaboratorId", nullable=true)
+    private Collaborator collaborator;
+    
 	
 	public ProjectCollaboratorRoles()
 	{
@@ -77,6 +83,7 @@ public class ProjectCollaboratorRoles implements Serializable
 	{
 		return project;
 	}
+	
 
 	public void setProject(Project project)
 	{

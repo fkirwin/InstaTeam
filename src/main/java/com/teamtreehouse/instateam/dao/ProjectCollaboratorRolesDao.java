@@ -13,7 +13,7 @@ public interface ProjectCollaboratorRolesDao
     ProjectCollaboratorRoles findByObjects(Role role, Collaborator collaborator, Project project);
     ProjectCollaboratorRoles findById(Long role, Long collaborator, Long project);
     ProjectCollaboratorRoles findProjectsByObjects(Project project);
-    ProjectCollaboratorRoles findProjectsById(Long project);
+    List<ProjectCollaboratorRoles> findProjectsById(Long project);
     void save(ProjectCollaboratorRoles pcr);
     void delete(ProjectCollaboratorRoles pcr);
 }

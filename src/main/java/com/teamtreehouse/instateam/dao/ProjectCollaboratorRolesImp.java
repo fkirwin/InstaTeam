@@ -1,10 +1,14 @@
 package com.teamtreehouse.instateam.dao;
 
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -54,8 +58,16 @@ public class ProjectCollaboratorRolesImp implements ProjectCollaboratorRolesDao
 	@Override
 	public ProjectCollaboratorRoles findById(Long role, Long collaborator, Long project)
 	{
-		// TODO Auto-generated method stub
-		return null;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ProjectCollaboratorRoles> criteria = builder.createQuery(ProjectCollaboratorRoles.class);											
+        Root<ProjectCollaboratorRoles> pcrRoot = criteria.from(ProjectCollaboratorRoles.class);
+        criteria.where(builder.equal(pcrRoot.get("role_id"), role))
+        		.where(builder.equal(pcrRoot.get("collaborator_id"), collaborator))
+				.where(builder.equal(pcrRoot.get("project_id"), project));
+        ProjectCollaboratorRoles pcr = session.createQuery(criteria).getSingleResult();
+        
+		return pcr;
 	}
 
 
@@ -91,10 +103,15 @@ public class ProjectCollaboratorRolesImp implements ProjectCollaboratorRolesDao
 	}
 
 	@Override
-	public ProjectCollaboratorRoles findProjectsById(Long project)
+	public List<ProjectCollaboratorRoles> findProjectsById(Long project)
 	{
-		// TODO Auto-generated method stub
-		return null;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ProjectCollaboratorRoles> criteria = builder.createQuery(ProjectCollaboratorRoles.class);											
+        Root<ProjectCollaboratorRoles> pcrRoot = criteria.from(ProjectCollaboratorRoles.class);
+        criteria.where(builder.equal(pcrRoot.get("project"), project));
+        List<ProjectCollaboratorRoles> pcr = session.createQuery(criteria).getResultList();
+		return pcr;
 	}
 
 }

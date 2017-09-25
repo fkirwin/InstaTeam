@@ -19,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtreehouse.instateam.model.Collaborator;
 import com.teamtreehouse.instateam.model.Project;
+import com.teamtreehouse.instateam.model.ProjectCollaboratorRoles;
 import com.teamtreehouse.instateam.model.Role;
 import com.teamtreehouse.instateam.service.CollaboratorService;
+import com.teamtreehouse.instateam.service.ProjectCollaboratorRoleService;
 import com.teamtreehouse.instateam.service.ProjectService;
 import com.teamtreehouse.instateam.service.RoleService;
 
@@ -33,6 +35,8 @@ public class ProjectController
 	private CollaboratorService collaboratorService;
 	@Autowired
 	private ProjectService projectService;
+	@Autowired
+	private ProjectCollaboratorRoleService projectCollaboratorRoleService;
 	
 	@RequestMapping(value={"/index","/",""})
     public String getProjectIndex(Model model) 
@@ -139,11 +143,21 @@ public class ProjectController
     public String getProjectDetails(@PathVariable Long projectId, Model model) 
     {   
 		Project project = projectService.findById(projectId);
-		List<Role> currentRoles = project.getRolesNeeded();
-		List<Collaborator> currentCollaborators = project.getCollaborators();
+		//List<Role> currentRoles = project.getRolesNeeded();
+		//List<Collaborator> currentCollaborators = project.getCollaborators();
+		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(projectId);
+		List<Role> currentRoles = new ArrayList<Role>();
+		List<Collaborator> currentCollaborators = new ArrayList<Collaborator>();
+		for(ProjectCollaboratorRoles item : pcr)
+		{
+			currentRoles.add(item.getRole());
+			currentCollaborators.add(item.getCollaborator());
+		}
+		
 		model.addAttribute("project", project);
 		model.addAttribute("currentRoles", currentRoles);
 		model.addAttribute("currentCollaborators", currentCollaborators);
+		model.addAttribute("pcr",pcr);
 		
 		List<Role> roles = roleService.findAll();
 		model.addAttribute("roles", roles);
@@ -158,17 +172,28 @@ public class ProjectController
     public String getProjectCollaborators(@PathVariable Long projectId, Model model) 
     {   
 		Project project = projectService.findById(projectId);
-		List<Role> currentRoles = project.getRolesNeeded();
-		List<Collaborator> currentCollaborators = project.getCollaborators();
+		//List<Role> currentRoles = project.getRolesNeeded();
+		//List<Collaborator> currentCollaborators = project.getCollaborators();
+		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(projectId);
+		List<Role> currentRoles = new ArrayList<Role>();
+		List<Collaborator> currentCollaborators = new ArrayList<Collaborator>();
+		for(ProjectCollaboratorRoles item : pcr)
+		{
+			currentRoles.add(item.getRole());
+			currentCollaborators.add(item.getCollaborator());
+		}
+		
 		model.addAttribute("project", project);
 		model.addAttribute("currentRoles", currentRoles);
 		model.addAttribute("currentCollaborators", currentCollaborators);
+		model.addAttribute("pcr",pcr);
 		
 		//List<Role> roles = roleService.findAll();
 		//model.addAttribute("roles", roles);
 		
-		//List<Collaborator> collaborators = collaboratorService.findAll();
-		//model.addAttribute("collaborators", collaborators);
+		List<Collaborator> collaborators = collaboratorService.findAll();
+		model.addAttribute("collaborators", collaborators);
+		
         return "project/project_collaborators";
     }
 	
