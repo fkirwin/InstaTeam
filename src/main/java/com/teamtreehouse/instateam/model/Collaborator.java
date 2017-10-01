@@ -32,8 +32,20 @@ public class Collaborator
     @ManyToOne
     private Role role;
     
+    @OneToMany(mappedBy="collaborator")
+    private List<ProjectCollaboratorRoles> pcr;
     
-    public Collaborator(){}
+    public List<ProjectCollaboratorRoles> getPcr()
+	{
+		return pcr;
+	}
+
+	public void setPcr(List<ProjectCollaboratorRoles> pcr)
+	{
+		this.pcr = pcr;
+	}
+
+	public Collaborator(){}
 
 	public Collaborator(CollaboratorBuilder builder)
 	{

@@ -10,10 +10,12 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.teamtreehouse.instateam.model.Assignments;
 import com.teamtreehouse.instateam.model.Collaborator;
 import com.teamtreehouse.instateam.model.Project;
 import com.teamtreehouse.instateam.model.ProjectCollaboratorRoles;
 import com.teamtreehouse.instateam.model.Role;
+import com.teamtreehouse.instateam.service.AssignmentsService;
 import com.teamtreehouse.instateam.service.CollaboratorService;
 import com.teamtreehouse.instateam.service.CollaboratorServiceImp;
 import com.teamtreehouse.instateam.service.ProjectCollaboratorRoleService;
@@ -33,6 +35,8 @@ public class Data implements ApplicationRunner
 	private RoleService rs;
 	@Autowired
 	private ProjectCollaboratorRoleService pcrs;
+	@Autowired
+	private AssignmentsService as;
 	
 	
 	public Collaborator populateCollaborator(String name, Role role)
@@ -88,17 +92,29 @@ public class Data implements ApplicationRunner
 			collaborators.add(populateCollaborator("Tom", roles.get(0)));
 			collaborators.add(populateCollaborator("Dick", roles.get(1)));	
 			collaborators.add(populateCollaborator("Harry", roles.get(2)));
-
+			
+			/*
+			List<Role> roles1 = new ArrayList<Role>();
+			roles1.add(populateRole("Developer"));
+			roles1.add(populateRole("QA"));
+			
+			
+			List<Collaborator> collaborators1 = new ArrayList<Collaborator>();
+			collaborators.add(populateCollaborator("Tom", roles.get(0)));
+			collaborators.add(populateCollaborator("Dick", roles.get(1)));
+			*/
 	
 			Project p1 = populateProject("Website", "active", "Making a website", roles, collaborators);
 			Project p2 = populateProject("MobileApp", "active", "Making a mobile app", roles, collaborators);
 			
-			assignProject(roles.get(0), collaborators.get(0), p1);
+			assignProject(roles.get(0), null, p1);
 			assignProject(roles.get(1), collaborators.get(1), p1);
 			assignProject(roles.get(2), collaborators.get(2), p2);
-			assignProject(roles.get(0), null, p2);
+			assignProject(roles.get(0), collaborators.get(0), p2);
 			
-			
+			List<Project> l = new ArrayList<Project>();
+			l.add(p1);
+			as.save(new Assignments(l,roles,collaborators));
 		
 	}
 	

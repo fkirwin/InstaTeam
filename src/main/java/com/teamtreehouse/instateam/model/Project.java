@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
@@ -36,12 +37,25 @@ public class Project
     @NotNull
     private String status;
     
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Role> rolesNeeded = new ArrayList<Role>();
     
-    @ManyToMany()
+    @ManyToMany
     private List<Collaborator> collaborators = new ArrayList<>();
     
+    @OneToMany(mappedBy="project")
+    private List<ProjectCollaboratorRoles> pcr;
+    
+    public List<ProjectCollaboratorRoles> getPcr()
+	{
+		return pcr;
+	}
+
+	public void setPcr(List<ProjectCollaboratorRoles> pcr)
+	{
+		this.pcr = pcr;
+	}
+	
     public Project(){};
     
 	public Project(ProjectBuilder projectBuilder)

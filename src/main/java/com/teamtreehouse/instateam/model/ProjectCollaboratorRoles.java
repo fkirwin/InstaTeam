@@ -43,7 +43,7 @@ public class ProjectCollaboratorRoles implements Serializable
 
 	//@Id
 	@ManyToOne(optional=true)
-	@JoinColumn(name="collaboratorId", nullable=true)
+	@JoinColumn(name="collaboratorId", nullable=true, updatable=true)
     private Collaborator collaborator;
     
 	

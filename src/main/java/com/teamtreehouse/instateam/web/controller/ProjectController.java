@@ -3,6 +3,8 @@ package com.teamtreehouse.instateam.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import javax.validation.Valid;
 
@@ -21,6 +23,7 @@ import com.teamtreehouse.instateam.model.Collaborator;
 import com.teamtreehouse.instateam.model.Project;
 import com.teamtreehouse.instateam.model.ProjectCollaboratorRoles;
 import com.teamtreehouse.instateam.model.Role;
+import com.teamtreehouse.instateam.service.AssignmentsService;
 import com.teamtreehouse.instateam.service.CollaboratorService;
 import com.teamtreehouse.instateam.service.ProjectCollaboratorRoleService;
 import com.teamtreehouse.instateam.service.ProjectService;
@@ -37,6 +40,8 @@ public class ProjectController
 	private ProjectService projectService;
 	@Autowired
 	private ProjectCollaboratorRoleService projectCollaboratorRoleService;
+	@Autowired
+	private AssignmentsService assignmentsService;
 	
 	@RequestMapping(value={"/index","/",""})
     public String getProjectIndex(Model model) 
@@ -127,14 +132,24 @@ public class ProjectController
     								Model model) 
     {   
 		List<Role> roles = new ArrayList<Role>();
+		List<Role> pcrRolesToAdd = new ArrayList<Role>();
+		List<Role> pcrRolesToRemove = new ArrayList<Role>();
+		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(project.getId());
 		
 		for(String role: rolesNeeded)
 		{
 			roles.add(roleService.findById(Long.parseLong(role)));
 		}
-			
+		
+		pcrRolesToAdd.addAll(roles);
+		
 		project.setRolesNeeded(roles);
 		projectService.save(project);
+		//these need refactoring probably...too tired.
+		projectCollaboratorRoleService.save(pcr, pcrRolesToAdd, project);
+		projectCollaboratorRoleService.delete(pcr, pcrRolesToRemove, roles);
+		
+		
         return "redirect:/index";
     }
 	
@@ -143,14 +158,13 @@ public class ProjectController
     public String getProjectDetails(@PathVariable Long projectId, Model model) 
     {   
 		Project project = projectService.findById(projectId);
-		//List<Role> currentRoles = project.getRolesNeeded();
+		List<Role> currentRoles = project.getRolesNeeded();
 		//List<Collaborator> currentCollaborators = project.getCollaborators();
 		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(projectId);
-		List<Role> currentRoles = new ArrayList<Role>();
+		//List<Role> currentRoles = new ArrayList<Role>();
 		List<Collaborator> currentCollaborators = new ArrayList<Collaborator>();
 		for(ProjectCollaboratorRoles item : pcr)
 		{
-			currentRoles.add(item.getRole());
 			currentCollaborators.add(item.getCollaborator());
 		}
 		
