@@ -186,27 +186,22 @@ public class ProjectController
     public String getProjectCollaborators(@PathVariable Long projectId, Model model) 
     {   
 		Project project = projectService.findById(projectId);
-		//List<Role> currentRoles = project.getRolesNeeded();
-		//List<Collaborator> currentCollaborators = project.getCollaborators();
 		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(projectId);
 		List<Role> currentRoles = new ArrayList<Role>();
 		List<Collaborator> currentCollaborators = new ArrayList<Collaborator>();
+		List<Collaborator> availableCollaborators = collaboratorService.findAll();
 		for(ProjectCollaboratorRoles item : pcr)
 		{
 			currentRoles.add(item.getRole());
 			currentCollaborators.add(item.getCollaborator());
 		}
-		
+
 		model.addAttribute("project", project);
 		model.addAttribute("currentRoles", currentRoles);
 		model.addAttribute("currentCollaborators", currentCollaborators);
 		model.addAttribute("pcr",pcr);
+		model.addAttribute("collaborators",availableCollaborators);
 		
-		//List<Role> roles = roleService.findAll();
-		//model.addAttribute("roles", roles);
-		
-		List<Collaborator> collaborators = collaboratorService.findAll();
-		model.addAttribute("collaborators", collaborators);
 		
         return "project/project_collaborators";
     }
