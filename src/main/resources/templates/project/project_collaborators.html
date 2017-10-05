@@ -27,15 +27,16 @@
         </nav>
         <section>
             <div class="container wrapper">
-                <form th:action="@{|/changeprojectcollaborators/${project.Id}|}" method="post">
+                <form th:action="@{|/projectcollaborators/${project.Id}|}" method="post">
                     <label th:text="${#strings.concat('For Project: ',project.name)}"></label>
                     <div th:each ="rc : ${pcr}">
 	                    <ul class="checkbox-list">
 	                        <li>
 	                        	<span class="primary" th:text="${rc.role.name}" th:value="${rc.role.id}">Developer</span>
+	                        	<input name="roles" th:value="${rc.role.id}" type="hidden"></input>
 	                            	<div class="custom-select">
 	                                	<span class="dropdown-arrow"></span>
-	                                	<select name="collaborators">
+	                                	<select id="collaborators" name="collaborators">
 	                                		<option th:if="${rc.collaborator!=null}" th:text="${rc.collaborator.name}" th:value="${rc.collaborator.id}" name="collaboratorid"></option>
 	                                		<option th:each="c : ${collaborators}" th:if="${rc.collaborator!=null and !rc.collaborator.name.equals(c.name)}"  th:text="${c.name}" th:value="${c.id}" name="collaboratorid"></option>
 	                                		<option th:if="${rc.collaborator==null}"  text="Not Assigned" th:value="null" name="collaboratorid">Not Assigned</option>
@@ -47,7 +48,7 @@
 	                 </div>
                     <div class="actions">
                         <input type="submit" value="Save" class="button"></input>
-                        <a th:href="@{|/projects/${project.id}|}" class="button button-secondary">Cancel</a>
+                        <a href="#" class="button button-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

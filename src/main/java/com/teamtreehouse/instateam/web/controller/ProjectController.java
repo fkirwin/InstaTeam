@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -206,12 +207,25 @@ public class ProjectController
         return "project/project_collaborators";
     }
 	
-	@RequestMapping(value="/changeprojectcollaborators/{projectId}", method = RequestMethod.POST)
-    public String addProjectCollaborators(@Valid Project project, 
+	@RequestMapping(value="/projectcollaborators/{projectId}", method = RequestMethod.POST)
+    public String addProjectCollaborators(
 			@RequestParam(value="collaborators") List<String> collaborators,
-			BindingResult br,
+			@RequestParam(value="roles") List<String> rolesNeeded, 
 			Model model) 
     {   
+		
+		for(String each: collaborators)
+		{
+			System.out.println(each);
+		}
+		
+		/*
+		for(String each: rolesNeeded)
+		{
+			System.out.println(each);
+		}
+		*/
+		/*
 		System.out.println(br.getAllErrors());
 		List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
 		
@@ -222,7 +236,8 @@ public class ProjectController
 			
 		project.setCollaborators(collaboratorList);
 		projectService.save(project);
-        return "redirect:/index";
+		*/
+		return "redirect:/";
     }
 	
 

@@ -38,6 +38,7 @@
                                     <option th:if="${!role.name.equals(collaborator.role.name)}" th:each = "role : ${roles}" th:value="${role.id}" th:text="${role.name}" name="roleid"></option>
                                 </select>
                         </div>
+                        <input></input>
                         <button class="button" type="submit">Save</button>
                   </div>
                 </form>
