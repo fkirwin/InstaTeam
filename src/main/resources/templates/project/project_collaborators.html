@@ -28,6 +28,7 @@
         <section>
             <div class="container wrapper">
                 <form th:action="@{|/projectcollaborators/${project.Id}|}" method="post">
+                	<input name="project" th:value="${project.id}" type="hidden"></input>
                     <label th:text="${#strings.concat('For Project: ',project.name)}"></label>
                     <div th:each ="rc : ${pcr}">
 	                    <ul class="checkbox-list">
@@ -39,7 +40,7 @@
 	                                	<select id="collaborators" name="collaborators">
 	                                		<option th:if="${rc.collaborator!=null}" th:text="${rc.collaborator.name}" th:value="${rc.collaborator.id}" name="collaboratorid"></option>
 	                                		<option th:each="c : ${collaborators}" th:if="${rc.collaborator!=null and !rc.collaborator.name.equals(c.name)}"  th:text="${c.name}" th:value="${c.id}" name="collaboratorid"></option>
-	                                		<option th:if="${rc.collaborator==null}"  text="Not Assigned" th:value="null" name="collaboratorid">Not Assigned</option>
+	                                		<option th:if="${rc.collaborator==null}"  text="Not Assigned" th:value='NULL' name="collaboratorid">Not Assigned</option>
 	                                		<option th:if="${rc.collaborator==null}" th:each="c : ${collaborators}" th:text="${c.name}" th:value="${c.id}" name="collaboratorid"></option>
 	                                	</select>
 	                            	</div>

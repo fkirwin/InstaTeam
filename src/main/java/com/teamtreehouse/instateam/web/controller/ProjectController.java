@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtreehouse.instateam.model.Collaborator;
@@ -81,11 +83,7 @@ public class ProjectController
 		//Always want current roles
 		List<Role> roles = roleService.findAll();
 		
-		//get existing attribute for posting
-		//Map<String, Object> modelAttributes = model.asMap();
-		//Project targetProject = (Project) modelAttributes.get("project");
-		
-		//Add model attributes
+
 		model.addAttribute("roles", roles);
 		model.addAttribute("action","/saveaddedproject");
 
@@ -100,6 +98,7 @@ public class ProjectController
     								RedirectAttributes redirectAttributes) 
     {   
 		List<Role> roles = new ArrayList<Role>();
+//TODO Make sure a project is allocated to the pcr table.
 		
 		for(String role: rolesNeeded)
 		{
@@ -107,14 +106,25 @@ public class ProjectController
 		}
 			
 		project.setRolesNeeded(roles);
-		
 		projectService.save(project);
+		
+		ProjectCollaboratorRoles pcr = new ProjectCollaboratorRoles();
+		pcr.setProject(project);
+		
+		for(String role: rolesNeeded)
+		{
+			Role r = roleService.findById(Long.parseLong(role));
+			pcr.setRole(r);
+			projectCollaboratorRoleService.save(pcr);
+		}
+
         return "redirect:/index";
     }
 	
 	@RequestMapping("/editproject/{projectId}")
     public String editProject(@PathVariable Long projectId, Model model) 
     {   
+		//TODO make sure pcr table is displayed instead of traditional table
 		Project project = projectService.findById(projectId);
 		List<Role> currentRoles = project.getRolesNeeded();
 		model.addAttribute("project", project);
@@ -129,29 +139,44 @@ public class ProjectController
 	
 	@RequestMapping(value="/editproject/{projectId}", method = RequestMethod.POST)
     public String saveEditedProject(@Valid Project project, 
-    								@RequestParam(value="roles") List<String> rolesNeeded, 
-    								Model model) 
+    								@RequestParam(value="roles", required=false, defaultValue="null") List<String> rolesNeeded, 
+    								BindingResult result,
+    								RedirectAttributes redirectAttributes) 
     {   
+		
+		 if(result.hasErrors()) 
+		 {
+	            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.category",result);
+	            redirectAttributes.addFlashAttribute("project", project);
+	            return String.format("redirect:/index");
+	       }
+		
+		if(rolesNeeded.equals("null")||rolesNeeded.get(0).equals("null"))
+		{
+			redirectAttributes.addFlashAttribute("flash",new FlashMessage("Please choose a role!", FlashMessage.Status.FAILURE));
+			return "redirect:/editproject/{projectId}";
+		}
+		
 		List<Role> roles = new ArrayList<Role>();
 		List<Role> pcrRolesToAdd = new ArrayList<Role>();
 		List<Role> pcrRolesToRemove = new ArrayList<Role>();
 		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(project.getId());
 		
-		for(String role: rolesNeeded)
-		{
-			roles.add(roleService.findById(Long.parseLong(role)));
-		}
+			for(String role: rolesNeeded)
+			{
+					roles.add(roleService.findById(Long.parseLong(role)));
+			}
+				
+			pcrRolesToAdd.addAll(roles);
+				
+			project.setRolesNeeded(roles);
+			projectService.save(project);
+				//these need refactoring probably...too tired.
+			projectCollaboratorRoleService.save(pcr, pcrRolesToAdd, project);			
+			projectCollaboratorRoleService.delete(pcr, pcrRolesToRemove, roles);
+			redirectAttributes.addFlashAttribute("flash",new FlashMessage("Successful update!", FlashMessage.Status.SUCCESS));
 		
-		pcrRolesToAdd.addAll(roles);
-		
-		project.setRolesNeeded(roles);
-		projectService.save(project);
-		//these need refactoring probably...too tired.
-		projectCollaboratorRoleService.save(pcr, pcrRolesToAdd, project);
-		projectCollaboratorRoleService.delete(pcr, pcrRolesToRemove, roles);
-		
-		
-        return "redirect:/index";
+        return "redirect:/editproject/{projectId}";
     }
 	
 	
@@ -209,34 +234,29 @@ public class ProjectController
 	
 	@RequestMapping(value="/projectcollaborators/{projectId}", method = RequestMethod.POST)
     public String addProjectCollaborators(
+    		@RequestParam(value="project") String projectId,
 			@RequestParam(value="collaborators") List<String> collaborators,
 			@RequestParam(value="roles") List<String> rolesNeeded, 
 			Model model) 
     {   
 		
-		for(String each: collaborators)
-		{
-			System.out.println(each);
-		}
+		ProjectCollaboratorRoles pcr = new ProjectCollaboratorRoles();
+		pcr.setProject(projectService.findById(Long.parseLong(projectId)));
 		
-		/*
-		for(String each: rolesNeeded)
+		for(int i = 0; i < rolesNeeded.size(); i ++)
 		{
-			System.out.println(each);
+			pcr.setRole(roleService.findById(Long.parseLong(rolesNeeded.get(i))));
+			if(collaborators.get(i).equals(null)||collaborators.get(i)==null||collaborators.get(i).equals(""))
+			{
+				projectCollaboratorRoleService.save(pcr);
+			}
+			else
+			{
+				pcr.setCollaborator(collaboratorService.findById(Long.parseLong(collaborators.get(i))));
+				projectCollaboratorRoleService.save(pcr);
+			}
 		}
-		*/
-		/*
-		System.out.println(br.getAllErrors());
-		List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
-		
-		for(String cs: collaborators)
-		{
-			collaboratorList.add(collaboratorService.findById(Long.parseLong(cs)));
-		}
-			
-		project.setCollaborators(collaboratorList);
-		projectService.save(project);
-		*/
+
 		return "redirect:/";
     }
 	

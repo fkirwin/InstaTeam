@@ -27,6 +27,7 @@
         </nav>
         <section>
             <div class="container wrapper">
+            <div th:fragment="flash" th:if="${flash != null}" th:text="${flash.message}"></div>
                 <form th:object="${project}" th:action="@{${action}}" method="post">
                 <input id="project" th:field="*{id}" type="hidden"></input>
                     <div>
