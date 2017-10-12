@@ -59,8 +59,8 @@
                         	</ul>
                        		<ul th:if="${not #lists.isEmpty(currentRoles)}" class="checkbox-list" th:each = "role : ${roles}" th:switch="${roleAllocated.id==role.id}">
                         		<li>
-                        			<input th:each ="roleAllocated : *{rolesNeeded}"  th:case="true" checked="checked" type="checkbox" th:value="${role.id}" name="roles"></input>
-                   					<input th:each ="roleAllocated : *{rolesNeeded}"  th:case="false" type="checkbox" th:value="${role.id}" name="roles"></input>
+                        			<input th:each ="roleAllocated : ${currentRoles}"  th:case="true" checked="checked" type="checkbox" th:value="${role.id}" name="roles"></input>
+                   					<input th:each ="roleAllocated : ${currentRoles}"  th:case="false" type="checkbox" th:value="${role.id}" name="roles"></input>
                    					<span th:text="${role.name}" th:id="${role.id}"></span>
                    				</li>
                    			</ul>

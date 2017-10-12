@@ -126,7 +126,13 @@ public class ProjectController
     {   
 		//TODO make sure pcr table is displayed instead of traditional table
 		Project project = projectService.findById(projectId);
-		List<Role> currentRoles = project.getRolesNeeded();
+		List<Role> currentRoles = new ArrayList<Role>();
+		List<ProjectCollaboratorRoles> pcr = projectCollaboratorRoleService.findProjectsById(project.getId());
+		for(ProjectCollaboratorRoles projectRolesAssigned: pcr)
+		{
+			
+			currentRoles.add(projectRolesAssigned.getRole());
+		}
 		model.addAttribute("project", project);
 		model.addAttribute("currentRoles", currentRoles);
 		
